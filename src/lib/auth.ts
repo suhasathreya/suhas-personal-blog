@@ -15,20 +15,8 @@ export const authOptions: NextAuthOptions = {
     strategy: "jwt",
     maxAge: 30 * 24 * 60 * 60, // 30 days
   },
-  cookies: {
-    sessionToken: {
-      name: `__Secure-next-auth.session-token`,
-      options: {
-        httpOnly: true,
-        sameSite: "lax",
-        path: "/",
-        secure: true,
-      },
-    },
-  },
   callbacks: {
     async signIn({ user }) {
-      // Only allow the admin email to sign in
       return user.email === ADMIN_EMAIL;
     },
     async jwt({ token, user }) {
