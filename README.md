@@ -1,36 +1,90 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# Personal Blog
 
-## Getting Started
+A minimalist personal blog built using the **Ralph Wiggum Loop** — an AI-powered development approach where Claude iterates through tasks autonomously.
 
-First, run the development server:
+## What is the Ralph Wiggum Loop?
+
+The Ralph Wiggum Loop is a bash-driven development workflow that:
+
+1. **Decomposes** a product spec into discrete user stories (`tasks.json`)
+2. **Iterates** through each task using fresh Claude instances
+3. **Maintains context** via a short-term memory file (`progress.txt`)
+4. **Ships** working code incrementally
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+# The loop in action
+while [ "$STATUS" != "completed" ]; do
+    claude -p "$(cat ralph-prompt.md)" --dangerously-skip-permissions
+    # Claude reads progress.txt, picks next task, implements, updates progress
+done
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+Each iteration gets a fresh context window, avoiding the "context stuffing" problem while maintaining project continuity through the progress file.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## How This Blog Was Built
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+1. **Wrote a PRD** — Raw product spec describing a minimalist blog (inspired by aigrant.com)
+2. **Generated tasks.json** — Claude decomposed the PRD into 20 user stories with acceptance criteria
+3. **Ran the loop** — Each task was picked up, implemented, and marked complete
+4. **Deployed** — Pushed to GitHub, deployed on Vercel with Turso database
 
-## Learn More
+Total tasks executed: 20 user stories from "Set up Next.js project" to "Deploy to production"
 
-To learn more about Next.js, take a look at the following resources:
+## Tech Stack
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+- **Framework:** Next.js 16 (App Router)
+- **Styling:** Tailwind CSS
+- **Database:** Turso (libSQL) — serverless SQLite
+- **Auth:** NextAuth.js with Google OAuth
+- **Hosting:** Vercel
+- **Content:** Markdown with react-markdown
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+## Features
 
-## Deploy on Vercel
+- Clean, minimal design
+- Markdown blog posts
+- Admin dashboard (`/admin`) with Google OAuth
+- CRUD operations for posts
+- Responsive layout
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## Local Development
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```bash
+# Install dependencies
+npm install
+
+# Set up environment variables
+cp .env.local.example .env.local
+# Fill in: TURSO_DATABASE_URL, TURSO_AUTH_TOKEN, GOOGLE_CLIENT_ID, GOOGLE_CLIENT_SECRET, NEXTAUTH_SECRET
+
+# Initialize database
+npm run seed
+
+# Run dev server
+npm run dev
+```
+
+## Project Structure
+
+```
+src/
+├── app/
+│   ├── admin/          # Admin dashboard & post management
+│   ├── api/            # API routes (posts CRUD, auth)
+│   ├── posts/          # Public blog posts
+│   └── contact/        # Contact page
+├── components/         # Header, Footer, UI components
+└── lib/
+    ├── auth.ts         # NextAuth configuration
+    └── db.ts           # Turso database functions
+```
+
+## The Ralph Wiggum Philosophy
+
+> "Me fail English? That's unpossible!" — Ralph Wiggum
+
+Like Ralph, the loop embraces simplicity. No complex orchestration, no agent frameworks — just a bash loop, a prompt, and fresh Claude instances chipping away at tasks one by one.
+
+---
+
+Built with Claude Code + the Ralph Wiggum Loop
